@@ -2,9 +2,19 @@ package com.lucas.qqserver.service;
 
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class ManageClientThreads {
     private static HashMap<String, ServerConnectClientThread> hm = new HashMap<>();
+
+    public static String getOnlineUser() {
+        String onlineUser = "";
+        Iterator<String> iterator = hm.keySet().iterator();
+        while (iterator.hasNext()) {
+            onlineUser += iterator.next().toString() + " ";
+        }
+        return onlineUser;
+    }
 
     public static HashMap<String, ServerConnectClientThread> getHm() {
         return hm;

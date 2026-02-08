@@ -36,7 +36,7 @@ public class QQServer {
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 User user = (User) ois.readObject();
                 Message message = new Message();
-                if (checkUser(user.getUserId(), user.getPassword())) {  // 登录通过
+                if (checkUser(user.getUserId(), user.getPasswd())) {  // 登录通过
                     message.setMesType(MessageType.MESSAGE_LOGIN_SUCCEED);
                     oos.writeObject(message);
                     ServerConnectClientThread serverConnectClientThread = new ServerConnectClientThread(socket, user.getUserId());
@@ -44,7 +44,7 @@ public class QQServer {
                     ManageClientThreads.addClientThread(user.getUserId(), serverConnectClientThread);
 
                 } else {    // 登录失败
-                    System.out.println("用户id="+user.getUserId() + ", pwd="+user.getPassword() + "验证失败");
+                    System.out.println("用户id="+user.getUserId() + ", pwd="+user.getPasswd() + "验证失败");
                     message.setMesType(MessageType.MESSAGE_LOGIN_FAILED);
                     oos.writeObject(message);
                     socket.close();
@@ -69,7 +69,7 @@ public class QQServer {
         if (user == null) {
             return false;
         }
-        if (!user.getPassword().equals(password)) {
+        if (!user.getPasswd().equals(password)) {
             return false;
         }
         return true;
