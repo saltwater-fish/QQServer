@@ -42,6 +42,12 @@ public class ServerConnectClientThread extends Thread{
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                     oos.writeObject(message2);
 
+                } else if (message.getMesType().equals(MessageType.MESSAGE_COMM_MES)) {
+                    // 接收到客户端发来的私聊请求，将信息进行转发
+                    ObjectOutputStream oos = new ObjectOutputStream(ManageClientThreads.getClientThread(message.getGetter()).getSocket().getOutputStream());
+                    oos.writeObject(message);
+
+
                 } else if (message.getMesType().equals(MessageType.MESSAGE_CLIENT_EXIT)) {
                     // 某个用户客户端退出
                     System.out.println(message.getSender() + "退出");
