@@ -44,6 +44,10 @@ public class ServerConnectClientThread extends Thread{
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                     oos.writeObject(message2);
 
+                } else if (message.getMesType().equals(MessageType.MESSAGE_FILE_MES)) {
+                    // 接收到发送文件的请求, 将消息转发给对应的用户
+                    ObjectOutputStream oos = new ObjectOutputStream(ManageClientThreads.getClientThread(message.getGetter()).getSocket().getOutputStream());
+                    oos.writeObject(message);
                 } else if (message.getMesType().equals(MessageType.MESSAGE_TO_ALL_MES)) {
                     // 群发消息,首先获得管理线程的hashmap
                     HashMap<String, ServerConnectClientThread> hm = ManageClientThreads.getHm();
