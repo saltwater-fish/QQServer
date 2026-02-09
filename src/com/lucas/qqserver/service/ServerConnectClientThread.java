@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class ServerConnectClientThread extends Thread{
 
@@ -41,6 +43,20 @@ public class ServerConnectClientThread extends Thread{
 
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                     oos.writeObject(message2);
+
+                } else if (message.getMesType().equals(MessageType.MESSAGE_TO_ALL_MES)) {
+                    // 群发消息,首先获得管理线程的hashmap
+                    HashMap<String, ServerConnectClientThread> hm = ManageClientThreads.getHm();
+                    // 遍历在线用户集合
+                    Iterator<String> iterator = hm.keySet().iterator();
+                    while (iterator.hasNext()) {
+                        String onLineUserId = iterator.next();
+                        if (!onLineUserId.equals(message.getSender())) {
+                            // 转发message
+                            ObjectOutputStream oos = new ObjectOutputStream(ManageClientThreads.getClientThread(onLineUserId).getSocket().getOutputStream());
+                            oos.writeObject(message);
+                        }
+                    }
 
                 } else if (message.getMesType().equals(MessageType.MESSAGE_COMM_MES)) {
                     // 接收到客户端发来的私聊请求，将信息进行转发
